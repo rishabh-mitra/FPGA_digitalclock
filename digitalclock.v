@@ -5,7 +5,7 @@
 // 
 // Create Date: 23.10.2017 13:49:10
 // Design Name: 
-// Module Name: twodigit_onefile
+// Module Name: digital_clock
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -34,14 +34,14 @@ module digital_clock(
     output [7:0]an
     );
   
-reg [3:0]first; //register for the first digit
-reg [3:0]second; //register for the second digit
-reg [3:0]third; //register for the third digit
-reg [3:0]fourth; //register for the fourth digit
-reg [3:0]fifth; //register for the fifth digit
-reg [3:0]sixth; //register for the sixth digit
-reg [3:0]seventh; //register for the seventh digit
-reg [3:0]eighth; //register for the eighth digit
+reg [3:0]first; //register for the first digit     ( millisecond's values (unit's place) )
+reg [3:0]second; //register for the second digit   ( millisecond's values (10's place) )
+reg [3:0]third; //register for the third digit     ( second's values (unit's place) )
+reg [3:0]fourth; //register for the fourth digit   ( second's values (10's place) )
+reg [3:0]fifth; //register for the fifth digit     ( minutes values (unit's place) )
+reg [3:0]sixth; //register for the sixth digit     ( minutes values (10's place) )
+reg [3:0]seventh; //register for the seventh digit ( hours values (unit's place) )
+reg [3:0]eighth; //register for the eighth digit   ( hours values (10's place) )
 
 reg [21:0] delay; //register to produce delay
 wire test;
@@ -56,7 +56,7 @@ always @ (posedge clock or posedge reset)
    delay <= delay + 1;
  end
  
-assign test = delay[19]; //AND each bit of delay with itself; test will be high only when all bits of delay are high
+assign test = delay[19]; //stores the delay part
 
 
 always @ (posedge test or posedge reset)
@@ -66,16 +66,16 @@ always @ (posedge test or posedge reset)
    second <= 0;
    third <= 0;
    fourth <= 0;
-   fifth <= 4'd8;
-   sixth <= 4'd4;
-   seventh <= 4'd5;
-   eighth <= 4'd1;
+   fifth <= 4'd8;       //load the minutes values (unit's place) (0-9)
+   sixth <= 4'd4;       //load the minutes values (10's place) (0-5)
+   seventh <= 4'd5;     //load the hours values (unit's place) (0-9)
+   eighth <= 4'd1;      //load the hours values (10's place) (0-2)
   end
-   else if (first==4'd9) begin  //x9 reached
+   else if (first==4'd9) begin  
     first <= 0;
-     if (second == 4'd9) begin //99 reached
+     if (second == 4'd9) begin 
       second <= 0;
-       if (third == 4'd9) begin //999  reached
+       if (third == 4'd9) begin 
         third <= 0;
         if (fourth == 4'd5 ) begin
           fourth <= 0;
@@ -202,7 +202,5 @@ always @ (*)
  end
 assign {g, f, e, d, c, b, a} = sseg_temp; 
 assign dp = 1'b1; //we dont need the decimal here so turn all of them off
-
-
 
 endmodule
